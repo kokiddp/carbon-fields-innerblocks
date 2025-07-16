@@ -16,35 +16,48 @@ class ServiceProvider
   /**
    * Boot the service provider and register the field type.
    * Automatically resolves asset URL/path if not provided.
+   *
+   * @param string|null $asset_url
+   * @param string|null $asset_path
+   * 
+   * @return void
    */
   public static function boot(?string $asset_url = null, ?string $asset_path = null): void
   {
     if ($asset_url === null || $asset_path === null) {
+      // Automatically resolve asset URL and path
       $ref = new \ReflectionClass(self::class);
-      $base_dir = dirname($ref->getFileName(), 2); // /carbon-fields-innerblocks
-      $base_url = self::resolve_base_url($base_dir);
-
+      $base_dir = realpath(dirname($ref->getFileName(), 2));
       self::$asset_path = $base_dir;
-      self::$asset_url = $base_url;
+      self::$asset_url = self::resolve_base_url($base_dir);
     } else {
-      self::$asset_path = rtrim($asset_path, '/');
+      self::$asset_path = realpath(rtrim($asset_path, '/'));
       self::$asset_url = rtrim($asset_url, '/');
     }
 
     \add_action('carbon_fields_register_fields', function () {
-      if (!class_exists(InnerBlockField::class)) {
+      if (! class_exists(InnerBlockField::class)) {
         require_once __DIR__ . '/InnerBlockField.php';
       }
-
       \Carbon_Fields\Carbon_Fields::extend('innerblock', InnerBlockField::class);
     });
   }
 
+  /**
+   * Get the asset URL.
+   * 
+   * @return string
+   */
   public static function get_asset_url(): string
   {
     return self::$asset_url;
   }
 
+  /**
+   * Get the asset path.
+   * 
+   * @return string
+   */
   public static function get_asset_path(): string
   {
     return self::$asset_path;
@@ -52,26 +65,61 @@ class ServiceProvider
 
   /**
    * Attempt to resolve asset base URL from known WP paths.
+   * 
+   * @param string $base_dir
+   * 
+   * @return string
    */
   protected static function resolve_base_url(string $base_dir): string
   {
-    if (function_exists('get_stylesheet_directory') && strpos($base_dir, get_stylesheet_directory()) === 0) {
-      return content_url(str_replace(get_stylesheet_directory(), '/themes/' . get_stylesheet(), $base_dir));
+    $base_dir = rtrim(realpath($base_dir), DIRECTORY_SEPARATOR);
+
+    // Child theme
+    if (function_exists('get_stylesheet_directory')) {
+      $child_dir = realpath(\get_stylesheet_directory());
+      if ($child_dir && strpos($base_dir, $child_dir) === 0) {
+        $rel = substr($base_dir, strlen($child_dir));
+        return \get_stylesheet_directory_uri() . str_replace(DIRECTORY_SEPARATOR, '/', $rel);
+      }
     }
 
-    if (function_exists('get_template_directory') && strpos($base_dir, get_template_directory()) === 0) {
-      return content_url(str_replace(get_template_directory(), '/themes/' . get_template(), $base_dir));
+    // Parent theme
+    if (function_exists('get_template_directory')) {
+      $parent_dir = realpath(\get_template_directory());
+      if ($parent_dir && strpos($base_dir, $parent_dir) === 0) {
+        $rel = substr($base_dir, strlen($parent_dir));
+        return \get_template_directory_uri() . str_replace(DIRECTORY_SEPARATOR, '/', $rel);
+      }
     }
 
-    if (defined('WP_PLUGIN_DIR') && strpos($base_dir, WP_PLUGIN_DIR) === 0) {
-      return plugins_url(str_replace(WP_PLUGIN_DIR, '', $base_dir));
+    // Plugin directory
+    if (defined('WP_PLUGIN_DIR')) {
+      $plug_dir = realpath(WP_PLUGIN_DIR);
+      if ($plug_dir && strpos($base_dir, $plug_dir) === 0) {
+        $rel = substr($base_dir, strlen($plug_dir));
+        return \plugins_url(str_replace(DIRECTORY_SEPARATOR, '/', $rel));
+      }
     }
 
-    if (defined('WPMU_PLUGIN_DIR') && strpos($base_dir, WPMU_PLUGIN_DIR) === 0) {
-      return content_url('/mu-plugins' . str_replace(WPMU_PLUGIN_DIR, '', $base_dir));
+    // MU-plugin directory
+    if (defined('WPMU_PLUGIN_DIR')) {
+      $mu_dir = realpath(WPMU_PLUGIN_DIR);
+      if ($mu_dir && strpos($base_dir, $mu_dir) === 0) {
+        $rel = substr($base_dir, strlen($mu_dir));
+        return \content_url('/mu-plugins' . str_replace(DIRECTORY_SEPARATOR, '/', $rel));
+      }
     }
 
-    // fallback
-    return content_url(str_replace(WP_CONTENT_DIR, '', $base_dir));
+    // Fallback on content
+    if (defined('WP_CONTENT_DIR')) {
+      $content_dir = realpath(WP_CONTENT_DIR);
+      if ($content_dir && strpos($base_dir, $content_dir) === 0) {
+        $rel = substr($base_dir, strlen($content_dir));
+        return \content_url(str_replace(DIRECTORY_SEPARATOR, '/', $rel));
+      }
+    }
+
+    // If nothing matches, return empty string
+    return '';
   }
 }
