@@ -1,0 +1,18 @@
+/* Carbon Fields InnerBlockField - Gutenberg Editor Styles */
+
+/* Only show border in Gutenberg editor, not frontend */
+.block-editor-block-list__block .cfib-innerblock-field,
+.edit-post-visual-editor .cfib-innerblock-field {
+  border: 1px dashed #aaa;
+  background: #fafafa;
+  transition: box-shadow 0.2s;
+}
+.block-editor-block-list__block .cfib-innerblock-field,
+.edit-post-visual-editor .cfib-innerblock-field {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.block-editor-block-list__block .cfib-innerblock-field:focus-within,
+.edit-post-visual-editor .cfib-innerblock-field:focus-within {
+  box-shadow: 0 0 0 2px #007cba;
+}

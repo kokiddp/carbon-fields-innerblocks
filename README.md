@@ -16,22 +16,31 @@ This is a Composer package that extends [Carbon Fields](https://carbonfields.net
 
 ---
 
+
 ## Installation
 
 ```bash
 composer require kokiddp/carbon-fields-innerblocks
 ```
 
-In your theme or plugin bootstrap:
+### Asset Path/URL Customization
+
+By default, the library tries to automatically resolve the asset URL and path for JS/CSS. If you use the library in a custom location, you can specify them manually:
 
 ```php
 use CFInnerBlocks\ServiceProvider;
 
 add_action('after_setup_theme', function () {
     \Carbon_Fields\Carbon_Fields::boot();
-    ServiceProvider::boot();
+    // Provide asset URL and path if needed
+    ServiceProvider::boot(
+        get_stylesheet_directory_uri() . '/vendor/kokiddp/carbon-fields-innerblocks',
+        get_stylesheet_directory() . '/vendor/kokiddp/carbon-fields-innerblocks'
+    );
 });
 ```
+
+If you use a plugin, adjust the paths accordingly. The library will use these values to enqueue assets.
 
 ---
 
