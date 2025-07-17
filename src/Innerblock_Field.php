@@ -6,12 +6,12 @@ use Carbon_Fields\Field\Field;
 
 
 /**
- * Class InnerBlock_Field
+ * Class Innerblock_Field
  * Custom Carbon Fields field for Gutenberg InnerBlocks.
  *
  * @package CFInnerBlocks
  */
-class InnerBlock_Field extends Field
+class Innerblock_Field extends Field
 {
   /**
    * Field type identifier.
