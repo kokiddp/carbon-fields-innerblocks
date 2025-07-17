@@ -49,7 +49,7 @@ If you use a plugin, adjust the paths accordingly. The library will use these va
 ```php
 use Carbon_Fields\Block;
 use Carbon_Fields\Field;
-use CFInnerBlocks\InnerBlockField;
+use CFInnerBlocks\InnerBlock_Field;
 
 Block::make('Content Block')
     ->add_fields([
