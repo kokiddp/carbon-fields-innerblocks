@@ -1,6 +1,6 @@
 <?php
 
-namespace CFInnerBlocks;
+namespace Carbon_Field_Innerblocks;
 
 use Carbon_Fields\Field\Field;
 
@@ -114,6 +114,17 @@ class Innerblock_Field extends Field
   }
 
   /**
+   * Prepare the field type for use
+   * Called once per field type when activated
+   */
+  public static function field_type_activated() {
+    $dir = \Carbon_Field_Innerblocks\DIR . '/languages/';
+		$locale = \get_locale();
+		$path = $dir . $locale . '.mo';
+		\load_textdomain('carbon-field-innerblocks', $path);
+  }
+
+  /**
    * Enqueue JS and CSS assets for the field.
    * 
    * @return void
@@ -136,5 +147,8 @@ class Innerblock_Field extends Field
       ['carbon-fields-core', 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components'],
       filemtime( dirname(__DIR__) . '/assets/block.js' )
     );
+
+    // Set script translations
+    \wp_set_script_translations('cfib-innerblock-field', 'carbon-field-innerblocks', dirname(__DIR__) . '/languages');
   }
 }

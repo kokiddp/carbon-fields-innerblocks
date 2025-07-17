@@ -2,7 +2,7 @@
   "name": "kokiddp/carbon-fields-innerblocks",
   "description": "Adds InnerBlocks support to Carbon Fields blocks.",
   "type": "library",
-  "license": "MIT",
+  "license": "GPL-2.0+",
   "authors": [
     {
       "name": "Gabriele Coquillard",
@@ -14,8 +14,11 @@
     "htmlburger/carbon-fields": "^3.3"
   },
   "autoload": {
+    "files": [
+      "field.php"
+    ],
     "psr-4": {
-      "CFInnerBlocks\\": "src/"
+      "Carbon_Field_Innerblocks\\": "core/"
     }
   }
 }

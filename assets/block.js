@@ -2,6 +2,7 @@
 
 const { InnerBlocks } = wp.blockEditor;
 const { createElement: el, Fragment } = wp.element;
+const { __ } = wp.i18n;
 
 window.CarbonFields = window.CarbonFields || {};
 window.CarbonFields.fields = window.CarbonFields.fields || {};
@@ -20,7 +21,7 @@ window.CarbonFields.fields.innerblock = class {
       template      = [],
       templateLock  = false,
       orientation   = 'vertical',
-      placeholder   = 'Add blocks here…',
+      placeholder   = __('Add blocks here...', 'carbon-field-innerblocks'),
     } = this.args;
 
     // Show placeholder only if editing and InnerBlocks is empty

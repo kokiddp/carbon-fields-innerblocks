@@ -23,20 +23,7 @@ This is a Composer package that extends [Carbon Fields](https://carbonfields.net
 composer require kokiddp/carbon-fields-innerblocks
 ```
 
-### Asset Path/URL Customization
-
-By default, the library tries to automatically resolve the asset URL and path for JS/CSS. If you use the library in a custom location, you can specify them manually:
-
-```php
-use CFInnerBlocks\ServiceProvider;
-
-add_action('after_setup_theme', function () {
-    \Carbon_Fields\Carbon_Fields::boot();
-    ServiceProvider::boot();
-});
-```
-
-If you use a plugin, adjust the paths accordingly. The library automatically handles asset loading using Carbon Fields' built-in directory resolution.
+The field will be automatically registered when the package is autoloaded by Composer.
 
 ---
 
@@ -45,7 +32,6 @@ If you use a plugin, adjust the paths accordingly. The library automatically han
 ```php
 use Carbon_Fields\Block;
 use Carbon_Fields\Field;
-use CFInnerBlocks\Innerblock_Field;
 
 Block::make('Content Block')
     ->add_fields([
