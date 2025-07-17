@@ -37,7 +37,7 @@ class ServiceProvider
 
     \add_action('carbon_fields_register_fields', function () {
       if (! class_exists(InnerBlock_Field::class)) {
-        require_once __DIR__ . '/InnerBlockField.php';
+        require_once __DIR__ . '/InnerBlock_Field.php';
       }
       \Carbon_Fields\Carbon_Fields::extend('innerblock', InnerBlock_Field::class);
     });
