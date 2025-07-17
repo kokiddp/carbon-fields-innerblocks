@@ -6,9 +6,6 @@
   border: 1px dashed #aaa;
   background: #fafafa;
   transition: box-shadow 0.2s;
-}
-.block-editor-block-list__block .cfib-innerblock-field,
-.edit-post-visual-editor .cfib-innerblock-field {
   padding: 10px;
   margin-bottom: 10px;
 }

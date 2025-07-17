@@ -41,6 +41,20 @@ class ServiceProvider
       }
       \Carbon_Fields\Carbon_Fields::extend('innerblock', InnerBlockField::class);
     });
+
+    // Enqueue our editor integration script
+    \add_action('enqueue_block_editor_assets', function () {
+      $url = self::$asset_url;
+      $path = self::$asset_path;
+      $js = "$url/assets/block.js";
+      $ver = file_exists("$path/assets/block.js") ? filemtime("$path/assets/block.js") : null;
+      \wp_enqueue_script('cfib-editor-integration', $js, [
+        'wp-blocks',
+        'wp-element',
+        'wp-block-editor',
+        'wp-components',
+      ], $ver, true);
+    });
   }
 
   /**
@@ -120,6 +134,7 @@ class ServiceProvider
     }
 
     // If nothing matches, return empty string
+    error_log("'carbon-fields-innerblocks' - could not resolve asset URL for base directory: $base_dir");
     return '';
   }
 }

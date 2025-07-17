@@ -125,45 +125,46 @@ class InnerBlockField extends Field
       return;
     }
 
-    $screen = \get_current_screen();
     // Gutenberg context check
+    $screen = \get_current_screen();    
     $is_gutenberg = isset($screen->is_block_editor) ? $screen->is_block_editor : (strpos($screen->base, 'post') !== false);
     if (!$is_gutenberg) {
       \add_action('admin_notices', function () {
-        echo '<div class="notice notice-error"><p>Carbon Fields InnerBlockField can only be used in Gutenberg block contexts.</p></div>';
+        echo '<div class="notice notice-error"><p>InnerBlockField can only be used within Gutenberg block contexts.</p></div>';
       });
       return;
     }
 
-    $asset_url  = rtrim(\CFInnerBlocks\ServiceProvider::get_asset_url(), '/');
-    $asset_path = rtrim(\CFInnerBlocks\ServiceProvider::get_asset_path(), '/');
+    $url  = ServiceProvider::get_asset_url();
+    $path = ServiceProvider::get_asset_path();
 
-    $js_file = $asset_path . '/assets/block.js';
-    $js_url  = \apply_filters('cfib_innerblock_js_url', $asset_url . '/assets/block.js');
-    $js_deps = \apply_filters('cfib_innerblock_js_deps', ['wp-blocks', 'wp-editor', 'wp-element', 'wp-components', 'wp-block-editor']);
-    $js_ver  = file_exists($js_file) ? filemtime($js_file) : null;
-
-    $css_file = $asset_path . '/assets/block.css';
-    $css_url  = \apply_filters('cfib_innerblock_css_url', $asset_url . '/assets/block.css');
-    $css_deps = \apply_filters('cfib_innerblock_css_deps', []);
-    $css_ver  = file_exists($css_file) ? filemtime($css_file) : null;
-
-    // Avoid duplicate enqueue
-    if (!\wp_script_is('cfib-innerblock-field', 'enqueued') && !\wp_script_is('cfib-innerblock-field', 'registered')) {
+    // Enqueue JS
+    $js_file = "$path/assets/block.js";
+    $js_ver = file_exists($js_file) ? filemtime($js_file) : null;
+    if (!\wp_script_is('cfib-innerblock-field', 'enqueued')) {
       \wp_enqueue_script(
         'cfib-innerblock-field',
-        $js_url,
-        $js_deps,
+        "$url/assets/block.js",
+        \apply_filters('cfib_innerblock_js_deps', [
+          'wp-blocks',
+          'wp-editor',
+          'wp-element',
+          'wp-components',
+          'wp-block-editor'
+        ]),
         $js_ver,
         true
       );
     }
 
-    if (!\wp_style_is('cfib-innerblock-field', 'enqueued') && !\wp_style_is('cfib-innerblock-field', 'registered')) {
+    // Enqueue CSS
+    $css_file = "$path/assets/block.css";
+    $css_ver = file_exists($css_file) ? filemtime($css_file) : null;
+    if (!\wp_style_is('cfib-innerblock-field', 'enqueued')) {
       \wp_enqueue_style(
         'cfib-innerblock-field',
-        $css_url,
-        $css_deps,
+        "$url/assets/block.css",
+        \apply_filters('cfib_innerblock_css_deps', []),
         $css_ver
       );
     }
