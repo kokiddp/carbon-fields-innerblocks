@@ -32,15 +32,11 @@ use CFInnerBlocks\ServiceProvider;
 
 add_action('after_setup_theme', function () {
     \Carbon_Fields\Carbon_Fields::boot();
-    // Provide asset URL and path if needed
-    ServiceProvider::boot(
-        get_stylesheet_directory_uri() . '/vendor/kokiddp/carbon-fields-innerblocks',
-        get_stylesheet_directory() . '/vendor/kokiddp/carbon-fields-innerblocks'
-    );
+    ServiceProvider::boot();
 });
 ```
 
-If you use a plugin, adjust the paths accordingly. The library will use these values to enqueue assets.
+If you use a plugin, adjust the paths accordingly. The library automatically handles asset loading using Carbon Fields' built-in directory resolution.
 
 ---
 
