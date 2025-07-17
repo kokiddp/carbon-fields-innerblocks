@@ -39,7 +39,7 @@ class ServiceProvider
       if (! class_exists(Innerblock_Field::class)) {
         require_once __DIR__ . '/Innerblock_Field.php';
       }
-      \Carbon_Fields\Carbon_Fields::extend('Innerblock_Field', Innerblock_Field::class);
+      \Carbon_Fields\Carbon_Fields::extend('CFInnerBlocks\\Innerblock_Field', Innerblock_Field::class);
     });
 
     // Enqueue our editor integration script
